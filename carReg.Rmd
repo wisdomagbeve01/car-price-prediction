@@ -1,0 +1,118 @@
+---
+title: "Car Price Predictor"
+author: "Wisdom Agbeve"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Cars93.
+CarPrice_Assignment.
+
+Scatterplots between price and other car variables for both datasets
+`cor` to calculate correlation also.
+To get variables that have strongest correlation with price.
+Use the top 1-4 variables to make linreg model to predict price.
+  Maybe do models for each of the variables with price.
+
+
+Homework -> correlation and scatterplots between variables.
+ horsepower -> mpg. length -> engine_size
+
+  
+
+
+Load both cars data
+
+```{r}
+cars93 <- read.csv("Cars93.csv")
+cars_assign = read.csv("CarPrice_Assignment.csv")
+```
+
+Scatter
+
+```{r}
+cars93$Passengers
+```
+
+```{r}
+cars93$Cylinders
+```
+
+
+
+```{r}
+columns93 <- c("MPG.city", "MPG.highway", "EngineSize", "Horsepower", "RPM", "Rev.per.mile", "Fuel.tank.capacity", "Length", "Wheelbase", "Width", "Rear.seat.room", "Luggage.room", "Weight")
+
+length(columns)
+```
+
+```{r}
+```
+
+
+```{r}
+ggplot(cars93, aes(x = MPG.city, y = Price)) + 
+  geom_point()
+```
+
+```{r}
+cars93[]
+```
+
+
+```{r}
+for (var in columns93)
+{
+  print(var);
+  p <- ggplot(cars93, aes_string(x = var, y = "Price")) + 
+  geom_point();
+  print(p);
+  correlation <- cor(cars93$Price, cars93[[var]]);
+  print(correlation)
+}
+```
+```{r}
+columns_assign <- c("wheelbase", "carlength", "carwidth", "carheight", "curbweight", "enginesize", "horsepower", "peakrpm", "citympg", "highwaympg", "price")
+```
+
+
+```{r}
+for (var in columns_assign)
+{
+  print(var);
+  p <- ggplot(cars_assign, aes_string(x = var, y = "price")) + 
+  geom_point();
+  print(p);
+  correlation <- cor(cars_assign$price, cars_assign[[var]]);
+  print(correlation)
+}
+```
+
+
+
