@@ -91,7 +91,8 @@ for (var in columns93)
 {
   print(var);
   p <- ggplot(cars93, aes_string(x = var, y = "Price")) + 
-  geom_point();
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE);
   print(p);
   correlation <- cor(cars93$Price, cars93[[var]]);
   print(correlation)
@@ -107,7 +108,8 @@ for (var in columns_assign)
 {
   print(var);
   p <- ggplot(cars_assign, aes_string(x = var, y = "price")) + 
-  geom_point();
+   geom_point() +
+  geom_smooth(method = "lm", se = FALSE);
   print(p);
   correlation <- cor(cars_assign$price, cars_assign[[var]]);
   print(correlation)
