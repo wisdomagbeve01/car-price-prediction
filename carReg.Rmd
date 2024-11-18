@@ -118,3 +118,12 @@ for (var in columns_assign)
 
 
 
+
+
+cars_assignment lin reg model
+```{r}
+model_assign <- lm(price ~ horsepower + enginesize + carlength + curbweight, data = cars_assign)
+summary(model_assign)
+```
+
+
