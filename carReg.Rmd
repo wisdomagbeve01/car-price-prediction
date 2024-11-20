@@ -69,12 +69,8 @@ cars93$Cylinders
 ```{r}
 columns93 <- c("MPG.city", "MPG.highway", "EngineSize", "Horsepower", "RPM", "Rev.per.mile", "Fuel.tank.capacity", "Length", "Wheelbase", "Width", "Rear.seat.room", "Luggage.room", "Weight")
 
-length(columns)
+length(columns93)
 ```
-
-```{r}
-```
-
 
 ```{r}
 ggplot(cars93, aes(x = MPG.city, y = Price)) + 
@@ -98,6 +94,8 @@ for (var in columns93)
   print(correlation)
 }
 ```
+
+
 ```{r}
 columns_assign <- c("wheelbase", "carlength", "carwidth", "carheight", "curbweight", "enginesize", "horsepower", "peakrpm", "citympg", "highwaympg", "price")
 ```
@@ -117,13 +115,32 @@ for (var in columns_assign)
 ```
 
 
-
-
-
-cars_assignment lin reg model
+Cars93 linear regression model
 ```{r}
-model_assign <- lm(price ~ horsepower + enginesize + carlength + curbweight, data = cars_assign)
+model93 <- lm(Price ~ MPG.city + EngineSize + Horsepower + Fuel.tank.capacity + Weight, data = cars93)
+summary(model93)
+```
+
+cars_assignment linear regression model
+```{r}
+model_assign <- lm(price ~ carwidth + curbweight + enginesize + horsepower + citympg, data = cars_assign)
 summary(model_assign)
 ```
+
+```{r}
+for (var in c("carwidth", "enginesize", "horsepower"))
+{
+  for (var1 in c("carwidth", "enginesize", "horsepower")){
+    # print("x=",var, "y="=var1);
+    p <- ggplot(cars_assign, aes_string(x = var, y = var1)) + 
+     geom_point() +
+    geom_smooth(method = "lm", se = FALSE);
+    print(p);
+    correlation <- cor(cars_assign[[var1]], cars_assign[[var]]);
+    print(correlation)
+  }
+}
+```
+
 
 
