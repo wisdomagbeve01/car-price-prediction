@@ -127,20 +127,48 @@ model_assign <- lm(price ~ carwidth + curbweight + enginesize + horsepower + cit
 summary(model_assign)
 ```
 
+
+cars_assign - Correlation between pairs of variables except price
 ```{r}
-for (var in c("carwidth", "enginesize", "horsepower"))
-{
-  for (var1 in c("carwidth", "enginesize", "horsepower")){
-    # print("x=",var, "y="=var1);
-    p <- ggplot(cars_assign, aes_string(x = var, y = var1)) + 
-     geom_point() +
-    geom_smooth(method = "lm", se = FALSE);
-    print(p);
-    correlation <- cor(cars_assign[[var1]], cars_assign[[var]]);
-    print(correlation)
+for (var in c("carwidth", "curbweight", "enginesize", "horsepower", "citympg")) {
+  for (var1 in c("carwidth", "curbweight", "enginesize", "horsepower", "citympg")) {
+    
+    if (var != var1) {
+      print(paste("x =", var, ", y =", var1))
+      
+      p <- ggplot(cars_assign, aes_string(x = var, y = var1)) + 
+        geom_point() +
+        geom_smooth(method = "lm", se = FALSE)
+      print(p)
+      
+      correlation <- cor(cars_assign[[var1]], cars_assign[[var]])
+      print(paste("Correlation between", var, "and", var1, ":", correlation))
+    }
   }
 }
+
 ```
 
+
+cars93 - Correlation between pairs of variables except price 
+```{r}
+for (var in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Weight")) {
+  for (var1 in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Weight")) {
+    
+    if (var != var1) {
+      print(paste("x =", var, ", y =", var1))
+      
+      p <- ggplot(cars93, aes_string(x = var, y = var1)) + 
+        geom_point() +
+        geom_smooth(method = "lm", se = FALSE)
+      print(p)
+      
+      correlation <- cor(cars93[[var1]], cars93[[var]])
+      print(paste("Correlation between", var, "and", var1, ":", correlation))
+    }
+  }
+}
+
+```
 
 
