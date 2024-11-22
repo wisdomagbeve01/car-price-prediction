@@ -126,7 +126,7 @@ cars_assignment linear regression model
 model_assign <- lm(price ~ carwidth + curbweight + enginesize + horsepower + citympg, data = cars_assign)
 summary(model_assign)
 ```
-
+mpgcity+highway horsepower enginesize weight
 
 cars_assign - Correlation between pairs of variables except price
 ```{r}
@@ -171,4 +171,38 @@ for (var in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Wei
 
 ```
 
+
+Linear regression model using common columns
+mpgcity+highway horsepower enginesize weight
+```{r}
+model_assign2 <- lm(price ~ citympg + highwaympg + curbweight + enginesize + horsepower, data = cars_assign)
+summary(model_assign2)
+```
+
+
+```{r}
+summary(model_assign2)
+```
+
+
+
+```{r}
+model_assign3 <- lm(price ~ curbweight + enginesize + horsepower, data = cars_assign)
+summary(model_assign3)
+```
+
+```{r}
+model_assign_all <- lm(price ~ wheelbase + carlength + carwidth + carheight + curbweight + enginesize + horsepower + peakrpm + citympg + highwaympg, data = cars_assign)
+summary(model_assign_all)
+```
+
+
+```{r}
+any(is.na(cars93))
+```
+
+```{r}
+custom_model <- lm(price ~ enginesize, data = cars_assign)
+summary(custom_model)
+```
 
