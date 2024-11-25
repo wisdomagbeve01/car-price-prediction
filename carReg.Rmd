@@ -4,48 +4,17 @@ author: "Wisdom Agbeve"
 date: "`r Sys.Date()`"
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Cars93. CarPrice_Assignment.
 
-## R Markdown
+Scatterplots between price and other car variables for both datasets `cor` to calculate correlation also. To get variables that have strongest correlation with price. Use the top 1-4 variables to make linreg model to predict price. Maybe do models for each of the variables with price.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-Cars93.
-CarPrice_Assignment.
-
-Scatterplots between price and other car variables for both datasets
-`cor` to calculate correlation also.
-To get variables that have strongest correlation with price.
-Use the top 1-4 variables to make linreg model to predict price.
-  Maybe do models for each of the variables with price.
-
-
-Homework -> correlation and scatterplots between variables.
- horsepower -> mpg. length -> engine_size
-
-  
-
+Homework -\> correlation and scatterplots between variables. horsepower -\> mpg. length -\> engine_size
 
 Load both cars data
 
@@ -64,8 +33,6 @@ cars93$Passengers
 cars93$Cylinders
 ```
 
-
-
 ```{r}
 columns93 <- c("MPG.city", "MPG.highway", "EngineSize", "Horsepower", "RPM", "Rev.per.mile", "Fuel.tank.capacity", "Length", "Wheelbase", "Width", "Rear.seat.room", "Luggage.room", "Weight")
 
@@ -81,7 +48,6 @@ ggplot(cars93, aes(x = MPG.city, y = Price)) +
 cars93[]
 ```
 
-
 ```{r}
 for (var in columns93)
 {
@@ -95,11 +61,9 @@ for (var in columns93)
 }
 ```
 
-
 ```{r}
 columns_assign <- c("wheelbase", "carlength", "carwidth", "carheight", "curbweight", "enginesize", "horsepower", "peakrpm", "citympg", "highwaympg", "price")
 ```
-
 
 ```{r}
 for (var in columns_assign)
@@ -114,21 +78,24 @@ for (var in columns_assign)
 }
 ```
 
-
 Cars93 linear regression model
+
 ```{r}
 model93 <- lm(Price ~ MPG.city + EngineSize + Horsepower + Fuel.tank.capacity + Weight, data = cars93)
 summary(model93)
 ```
 
 cars_assignment linear regression model
+
 ```{r}
 model_assign <- lm(price ~ carwidth + curbweight + enginesize + horsepower + citympg, data = cars_assign)
 summary(model_assign)
 ```
+
 mpgcity+highway horsepower enginesize weight
 
 cars_assign - Correlation between pairs of variables except price
+
 ```{r}
 for (var in c("carwidth", "curbweight", "enginesize", "horsepower", "citympg")) {
   for (var1 in c("carwidth", "curbweight", "enginesize", "horsepower", "citympg")) {
@@ -149,8 +116,8 @@ for (var in c("carwidth", "curbweight", "enginesize", "horsepower", "citympg")) 
 
 ```
 
+cars93 - Correlation between pairs of variables except price
 
-cars93 - Correlation between pairs of variables except price 
 ```{r}
 for (var in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Weight")) {
   for (var1 in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Weight")) {
@@ -171,20 +138,18 @@ for (var in c("MPG.city", "EngineSize", "Horsepower", "Fuel.tank.capacity", "Wei
 
 ```
 
+Linear regression model using common columns mpgcity+highway horsepower enginesize weight
 
-Linear regression model using common columns
-mpgcity+highway horsepower enginesize weight
 ```{r}
 model_assign2 <- lm(price ~ citympg + highwaympg + curbweight + enginesize + horsepower, data = cars_assign)
 summary(model_assign2)
 ```
 
-
 ```{r}
 summary(model_assign2)
 ```
 
-
+The main model
 
 ```{r}
 model_assign3 <- lm(price ~ curbweight + enginesize + horsepower, data = cars_assign)
@@ -196,7 +161,6 @@ model_assign_all <- lm(price ~ wheelbase + carlength + carwidth + carheight + cu
 summary(model_assign_all)
 ```
 
-
 ```{r}
 any(is.na(cars93))
 ```
@@ -204,5 +168,54 @@ any(is.na(cars93))
 ```{r}
 custom_model <- lm(price ~ enginesize, data = cars_assign)
 summary(custom_model)
+```
+
+Clean Cars93.csv, use it to validate model.
+
+```{r}
+price_prediction_model <- model_assign3
+```
+
+Get the columns needed to validate from cars 93, three needed. columns
+```{r}
+car_variables <- cars93[, c("Weight", "EngineSize", "Horsepower")]
+```
+
+
+Convert EngineSize to cubic centiliters
+```{r}
+car_variables$EngineSize <- car_variables$EngineSize * 100 
+```
+
+Change the column names to reflect that of cars_assign
+```{r}
+colnames(car_variables) <- c("curbweight", "enginesize", "horsepower")
+```
+
+Check for null rows
+```{r}
+anyNA(car_variables)
+```
+Check cars 93 for NA
+```{r}
+anyNA(cars93)
+```
+
+
+Predict for first row
+```{r}
+first_row = car_variables[1, ]
+print(first_row)
+first_row <- data.frame(curbweight = 2705, enginesize = 180, horsepower = 140)
+```
+```{r}
+predicted_price <- predict(price_prediction_model, first_row)
+print(predicted_price)
+```
+
+Predict for all in cars93
+```{r}
+predicted_prices <- predict(price_prediction_model, car_variables)
+print(predicted_prices)
 ```
 
