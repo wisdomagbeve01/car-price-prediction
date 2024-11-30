@@ -200,30 +200,31 @@ summary(custom_model)
 **Data Cleaning:**
 **Clean Cars93.csv, use it to validate model.**
 ```{r}
-price_prediction_model <- model_assign3
+price_prediction_assign <- model_assign3
 ```
 
 **Get the columns needed to validate from cars 93, three needed columns**
 ```{r}
-car_variables <- cars93[, c("Weight", "EngineSize", "Horsepower")]
+cars93_clean <- cars93[, c("Weight", "EngineSize", "Horsepower")]
 ```
 
 
 **Convert EngineSize to cubic centiliters**
 ```{r}
-car_variables$EngineSize <- car_variables$EngineSize * 100 
+cars93_clean$EngineSize <- cars93_clean$EngineSize * 100 
 ```
 
 **Change the column names to reflect that of cars_assign**
 ```{r}
-colnames(car_variables) <- c("curbweight", "enginesize", "horsepower")
+colnames(cars93_clean) <- c("curbweight", "enginesize", "horsepower")
 ```
 
 **Check for null rows**
 ```{r}
-anyNA(car_variables)
+anyNA(cars93_clean)
 ```
-**Check cars 93 for NA**
+
+**Check cars 93 for NA. Should be True**
 ```{r}
 anyNA(cars93)
 ```
@@ -231,20 +232,69 @@ anyNA(cars93)
 
 **Predict for first row**
 ```{r}
-first_row = car_variables[1, ]
-print(first_row)
-first_row <- data.frame(curbweight = 2705, enginesize = 180, horsepower = 140)
+first_row = cars93_clean[1, ]
 ```
 ```{r}
-predicted_price <- predict(price_prediction_model, first_row)
+predicted_price <- predict(price_prediction_assign, first_row)
 print(predicted_price)
 ```
 
 **Predict for all in cars93**
 ```{r}
-predicted_prices <- predict(price_prediction_model, car_variables)
-print(predicted_prices)
+predicted_prices_assign <- predict(price_prediction_assign, cars93_clean)
+print(predicted_prices_assign[1:10])
 ```
+Calculate Error of cars_assign prediction model, comparing the cars93$Max.Price
+```{r}
+# First multiply cars 93 prices by 1000
+cars93_prices = cars93$Max.Price * 1000
+
+mse_assign = mean((cars93_prices - predicted_prices_assign)^2)
+rmse_assign = sqrt(mse_assign)
+mae_assign = mean(abs(cars93_prices - predicted_prices_assign))
+
+
+print(paste("Mean Squared Error =", mse_assign
+            , ", Root Mean Squared Error =", rmse_assign
+            , ", Mean Absolute Error =", mae_assign))
+
+```
+Values seem large: Check differences.
+```{r}
+abs(cars93_prices - predicted_prices_assign)[1:10]
+# Some differences are really low... but some are pretty high :(
+```
+Get percentage of standard errors and predicted_prices_assign
+```{r}
+mean_predicted_price <- mean(predicted_prices_assign)
+print(mean_predicted_price)
+print(rmse_assign / mean_predicted_price)
+print(mae_assign / mean_predicted_price)
+```
+
+
+Make a model with cars 93 using the same variables
+```{r}
+cars93_1000 = read.csv("Cars93.csv")
+cars93_1000$Max.Price = cars93_1000$Max.Price * 1000
+price_model93 <- lm(Max.Price ~ Weight + EngineSize + Horsepower, data = cars93_1000)
+summary(price_model93)
+```
+Test the model on cars_assign
+
+```{r}
+# Get necessary columns
+cars_assign_clean = cars_assign[, c("curbweight", "enginesize", "horsepower")]
+
+# Rename columns to fit model
+colnames(cars_assign_clean) <- c("Weight", "EngineSize", "Horsepower")
+
+
+predicted_prices93 = predict(price_model93, cars_assign_clean)
+predicted_prices93[1:10]
+```
+Turns out that cars 93 model is really bad. We can manage cars_assign model.
+
 
 **Conclusion and Insights:** The project successfully demonstrated the process of predicting car prices using linear regression model on two distinct datasets. By exploring various predictors, such as engine size, horsepower, and weight, we identified key factors influencing car prices. 
 The analysis revealed: **Strong predictors:** Variables like horsepower and curb weight consistently showed a significant impact on car prices across both datasets. **Model performance:** Both models achieved reasonable accuracy, with R-squared values indicating a good fit. However, there is room for improvement in capturing price variability. **Dataset differences:** The comparison between the Cars93 and CarPrice_Assignment datasets highlighted differences in market segments and vehicle specifications.
