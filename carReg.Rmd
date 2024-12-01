@@ -111,6 +111,16 @@ for (var in columns_assign)
 }
 ```
 
+Heatmap visualization
+```{r}
+ggplot(cars_assign, aes(x = peakrpm, y = price)) +
+  geom_bin2d() +
+  labs(x = "Peak RPM", y = "Price", title = "Heatmap of Price vs. Peak RPM")
+```
+
+
+
+
 **Cars93 linear regression model**
 ```{r}
 model93 <- lm(Price ~ MPG.city + EngineSize + Horsepower + Fuel.tank.capacity + Weight, data = cars93)
